@@ -1,0 +1,80 @@
+
+<style>
+body {
+margin: 0px;
+padding: 0px;
+}
+
+
+</style>
+
+
+<canvas style="background:red" id="c" width="1000" height="1000"></canvas>
+<textarea id="out" style="width:1000; height:200;"></textarea>
+
+<script>
+var canvas = document.getElementById('c');
+var out = document.getElementById('out');
+var context = canvas.getContext('2d');
+
+var x = 2964;
+var y = 2780;
+
+// 1036,2684
+// 2964,2780
+
+var frame = -1;
+
+var img = new Image();
+
+function draw() {
+    var b = 10;
+    xx = (-x * b) + 500;
+    yy = (-y * b) + 500;
+    ww = img.width * b;
+    hh = img.height * b;
+
+    context.drawImage(img, xx, yy, ww, hh);
+
+    context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+    context.beginPath();
+    var s = 50;
+    context.moveTo(500,500-s);
+    context.lineTo(500,500+s);
+    context.moveTo(500-s,500);
+    context.lineTo(500+s,500);
+    context.stroke();
+}
+
+img.onload = draw;
+
+function next_frame() {
+    frame += 1;
+    fr = frame;
+    if (fr < 10) fr = "0" + fr;
+
+    out.value = out.value + "\n" + x + "\t" + y + "\t" + img.src;
+    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+}
+
+function keyz(e) {
+    switch (e.keyCode) {
+    case 119: //w
+        y--; draw(); break;
+    case 97: //a
+        x--; draw(); break;
+    case 115: //d
+        y++; draw(); break;
+    case 100: //s
+        x++; draw(); break;
+    case 32: //space
+        next_frame();
+        break;
+    }
+
+}
+
+window.addEventListener( "keypress", keyz, false );
+
+</script>
+
