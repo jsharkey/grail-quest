@@ -18,7 +18,13 @@
 #
 
 import subprocess, re, os, sys
+
 from scipy import signal
+
+from progressbar import AnimatedMarker, Bar, BouncingBar, Counter, ETA, \
+    FileTransferSpeed, FormatLabel, Percentage, \
+    ProgressBar, ReverseBar, RotatingMarker, \
+    SimpleProgress, Timer
 
 re_ident = re.compile(
 	"Red:.+?mean: ([\d.]+).+?"
@@ -26,10 +32,16 @@ re_ident = re.compile(
 	"Blue:.+?mean: ([\d.]+).+?"
 	"Overall:.+?mean: ([\d.]+).+?", re.DOTALL)
 
-# Quickly estimate luminance using DNG thumbnail
 files = [ "%08d.DNG" % (n) for n in range(16, 378) ]
+
+# Quickly estimate luminance using DNG thumbnail
+
+widgets = ['normalize'.ljust(20), '(', Counter(), '/', str(len(files)), ') ', Percentage(), ' ', Bar(), ' ', ETA()]
+pbar = ProgressBar(widgets=widgets, maxval=len(files)).start()
+
 lum_in = []
-for dng in files:
+for i in range(len(files)):
+	dng = files[i]
 	thumb = "%s.thumb" % (dng)
 	if not os.path.isfile(thumb):
 		subprocess.check_output(["tiffcp", dng, thumb], stderr=subprocess.STDOUT)
@@ -45,36 +57,45 @@ for dng in files:
 	r, g, b, over = re_ident.search(res).groups()
 	lum = 0.2126 * float(r) + 0.7152 * float(g) + 0.0722 * float(b)
 	lum_in.append(lum)
+	pbar.update(i)
+
+pbar.finish()
 
 
 # Aim for the best brightness ramping over time
-lum_out = signal.savgol_filter(lum_in, 21, 3)
+lum_out = signal.savgol_filter(lum_in, 101, 5)
 
-for i in range(len(lum_in)):
-	print files[i], lum_in[i], "-->", lum_out[i],
 
-	exp_in = (0.03353246037*lum_in[i])-1.3650011411500929
-	exp_out = (0.03353246037*lum_out[i])-1.3650011411500929
-	exp_delta = 1 + (exp_out - exp_in)
+# echo "set terminal wxt size 1024,768; plot 'comp.plot' using 2 with lines, 'comp.plot' using 3 with lines" | gnuplot -p
+with open("comp.plot", 'w') as plot:
+	for i in range(len(lum_in)):
+		exp_in = (0.03353246037*lum_in[i])-1.3650011411500929
+		exp_out = (0.03353246037*lum_out[i])-1.3650011411500929
+		exp_delta = 1 + (exp_out - exp_in)
 
-	print "\t", exp_delta
-	with open("%s.pp3" % (files[i]), 'w') as f:
-		f.write("""
+		print >>plot, files[i], "\t", lum_in[i], "\t", lum_out[i], "\t", exp_delta
+		with open("%s.pp3" % (files[i]), 'w') as f:
+			f.write("""
 [Exposure]
 Compensation=%f
 """ % (exp_delta))
 
 
-for dng in files:
-	print "Processing %s..." % (dng)
-	jpg = "post_%s.jpg" % (dng)
+widgets = ['develop'.ljust(20), '(', Counter(), '/', str(len(files)), ') ', Percentage(), ' ', Bar(), ' ', ETA()]
+pbar = ProgressBar(widgets=widgets, maxval=len(files)).start()
+
+for i in range(len(files)):
+	dng = files[i]
+	jpg = "post2_%s.jpg" % (dng)
 	if not os.path.isfile(jpg):
 		subprocess.check_output(["rawtherapee",
 			"-o", jpg,
 			"-p", "template.pp3",
 			"-p", "%s.pp3" % (dng),
 			"-c", dng], stderr=subprocess.STDOUT)
+	pbar.update(i)
 
+pbar.finish()
 
 
 
