@@ -17,13 +17,19 @@ var canvas = document.getElementById('c');
 var out = document.getElementById('out');
 var context = canvas.getContext('2d');
 
-x = 3742;
-y= 982;
-
 // 1036,2684
 // 2964,2780
 
-var x=2566, y=2873;
+var x=3203, y=1004;
+var set=[ [2100,2392], 
+    [2091,2392], [2120,2384], [2105,2366], [2106,2360], [2135,2333], [2148,2328], [2134,2334], [2124,2330], [2144,2325], [2121,2328], 
+    [2126,2314], [2142,2313], [2113,2302], [2143,2313], [2137,2324], [2136,2318], [2138,2296], [2129,2293], [2142,2302], [2127,2295], 
+    [2112,2321], [2118,2312], [2135,2308], [2142,2293], [2107,2300], [2128,2300], [2130,2303], [2125,2315], [2145,2279], [2149,2300], 
+    [2148,2294], [2153,2287], [2147,2311], [2117,2295], [2106,2319], [2110,2306], [2126,2298], [2101,2306], [2145,2280], [2128,2316], 
+    [2144,2277], [2126,2296], [2128,2280], [2129,2269], [2135,2248], [2146,2285], [2160,2255], [2118,2279], [2153,2280], [2148,2269], 
+    [2141,2286], [2128,2281], [2125,2279], [2147,2292], [2142,2275], [2145,2259], [2149,2250], [2115,2254], [2157,2257], [2105,2265], 
+    [2146,2251], [2126,2256], [2149,2248], [2144,2256], [2103,2254], [2109,2236], [2132,2242], [2136,2222], [2144,2229], [2166,2208], 
+    [2169,2189], [2126,2193], [2170,2185], [2163,2156], [2118,2244], [2146,2188], [2037,2200], ];
 
 /*
 
@@ -37,12 +43,14 @@ var x=2566, y=2873;
 */
 
 
+var frame = -1;
+
 var img = new Image();
 
 function draw() {
-    var b = 5;
-    xx = (-x * b) + 500;
-    yy = (-y * b) + 500;
+    var b = 10;
+    xx = (-set[frame][0] * b) + 500;
+    yy = (-set[frame][1] * b) + 500;
     ww = img.width * b;
     hh = img.height * b;
 
@@ -50,7 +58,7 @@ function draw() {
 
     context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
     context.beginPath();
-    var s = 50;
+    var s = 100;
     context.moveTo(500,500-s);
     context.lineTo(500,500+s);
     context.moveTo(500-s,500);
@@ -60,29 +68,34 @@ function draw() {
 
 img.onload = draw;
 
-function next_frame() {
-    frame += 10;
+function load() {
+    //frame += 1;
     fr = frame;
     if (fr < 10) fr = "0" + fr;
 
-    out.value = out.value + "\n" + Math.round(x) + "\t" + Math.round(y) + "\t" + img.src;
-//    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
-    img.src = "file:///home/jsharkey/grail-quest/rt"+fr+".jpg";
+    //out.value = out.value + "\n" + Math.round(x) + "\t" + Math.round(y) + "\t" + img.src;
+//    img.src = "file:///bandroid/lapse/100EOS5D/grail-quest/rt"+fr+".jpg";
+    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+//    img.src = "file:///home/jsharkey/grail-quest/rt"+fr+".jpg";
+
+    //x = set[frame][0];
+    //y = set[frame][1];
 }
 
 function keyz(e) {
     switch (e.keyCode) {
     case 119: //w
-        y--; draw(); break;
+        set[frame][1]--; draw(); break;
     case 97: //a
-        x--; draw(); break;
+        set[frame][0]--; draw(); break;
     case 115: //d
-        y++; draw(); break;
+        set[frame][1]++; draw(); break;
     case 100: //s
-        x++; draw(); break;
-    case 32: //space
-        next_frame();
-        break;
+        set[frame][0]++; draw(); break;
+    case 91: // [
+        frame--; load(); break;
+    case 93: // ]
+        frame++; load(); break;
     }
 
 }
@@ -90,7 +103,7 @@ function keyz(e) {
 function clickz(e) {
     x += (e.clientX - 500) / 5;
     y += (e.clientY - 500) / 5;
-    next_frame();
+    frame++; load();
 }
 
 window.addEventListener( "keypress", keyz, false );

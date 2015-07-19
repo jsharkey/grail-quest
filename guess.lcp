@@ -7,31 +7,200 @@
          <photoshop:CameraProfiles>
             <rdf:Seq>
                <rdf:li rdf:parseType="Resource">
-                  <stCamera:Author>aAdobe (www.adobe.com)</stCamera:Author>
-                  <stCamera:ProfileName>aAdobe (Nikon AF-S NIKKOR 14-24mm f/2.8G ED)</stCamera:ProfileName>
-                  <stCamera:Make>aNIKON CORPORATION</stCamera:Make>
-                  <stCamera:Model>aNIKON D3X</stCamera:Model>
+                  <stCamera:Author>Adobe (www.adobe.com)</stCamera:Author>
+                  <stCamera:ProfileName>Adobe (Nikon AF-S NIKKOR 14-24mm f/2.8G ED)</stCamera:ProfileName>
+                  <stCamera:Make>NIKON CORPORATION</stCamera:Make>
+                  <stCamera:Model>NIKON D3X</stCamera:Model>
                   <stCamera:Lens>14.0-24.0 mm f/2.8</stCamera:Lens>
                   <stCamera:LensID>146</stCamera:LensID>
                   <stCamera:LensInfo>140/10 240/10 28/10 28/10</stCamera:LensInfo>
-                  <stCamera:ImageWidth>5760.000000</stCamera:ImageWidth>
-                  <stCamera:ImageLength>3840.000000</stCamera:ImageLength>
-                  <stCamera:FocalLength>50.000000</stCamera:FocalLength>
-                  <stCamera:ApertureValue>4</stCamera:ApertureValue>
-                  <stCamera:LensPrettyName>aNikon AF-S NIKKOR 14-24mm f/2.8G ED</stCamera:LensPrettyName>
-                  <stCamera:CameraPrettyName>aNIKON D3X</stCamera:CameraPrettyName>
+                  <stCamera:ImageWidth>6048.000000</stCamera:ImageWidth>
+                  <stCamera:ImageLength>4032.000000</stCamera:ImageLength>
+                  <stCamera:FocalLength>14.000000</stCamera:FocalLength>
+                  <stCamera:ApertureValue>6.918863</stCamera:ApertureValue>
+                  <stCamera:LensPrettyName>Nikon AF-S NIKKOR 14-24mm f/2.8G ED</stCamera:LensPrettyName>
+                  <stCamera:CameraPrettyName>NIKON D3X</stCamera:CameraPrettyName>
                   <stCamera:CameraRawProfile>False</stCamera:CameraRawProfile>
-                  <!-- <stCamera:FocusDistance>0.795214</stCamera:FocusDistance> -->
+                  <stCamera:FocusDistance>0.795214</stCamera:FocusDistance>
                   <stCamera:SensorFormatFactor>1.000000</stCamera:SensorFormatFactor>
                   <stCamera:PerspectiveModel rdf:parseType="Resource">
                      <stCamera:Version>2</stCamera:Version>
-                     <stCamera:ImageXCenter>0.50</stCamera:ImageXCenter>
-                     <stCamera:ImageYCenter>0.50</stCamera:ImageYCenter>
-                     <stCamera:RadialDistortParam1>-0.10705000</stCamera:RadialDistortParam1>
-                     <!--
+                     <stCamera:FocalLengthX>0.337212</stCamera:FocalLengthX>
+                     <stCamera:FocalLengthY>0.337212</stCamera:FocalLengthY>
+                     <stCamera:ImageXCenter>0.500064</stCamera:ImageXCenter>
+                     <stCamera:ImageYCenter>0.516091</stCamera:ImageYCenter>
+                     <stCamera:RadialDistortParam1>-0.016578</stCamera:RadialDistortParam1>
                      <stCamera:ResidualMeanError>0.000345</stCamera:ResidualMeanError>
                      <stCamera:ResidualStandardDeviation>0.000194</stCamera:ResidualStandardDeviation>
-                     -->
+                     <stCamera:ChromaticGreenModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.336927</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.336927</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.500067</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.516078</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.016576</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000342</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000193</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticGreenModel>
+                     <stCamera:ChromaticRedGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000078</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.336927</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.336927</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.500067</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.516078</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>0.000070</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000344</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000193</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticRedGreenModel>
+                     <stCamera:ChromaticBlueGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000644</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.336927</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.336927</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.500067</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.516078</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.000178</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000341</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000194</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticBlueGreenModel>
+                     <stCamera:VignetteModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.337212</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.337212</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.500064</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.516091</stCamera:ImageYCenter>
+                        <stCamera:VignetteModelParam1>-0.097065</stCamera:VignetteModelParam1>
+                        <stCamera:ResidualMeanError>0.013314</stCamera:ResidualMeanError>
+                     </stCamera:VignetteModel>
+                  </stCamera:PerspectiveModel>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <stCamera:Author>Adobe (www.adobe.com)</stCamera:Author>
+                  <stCamera:ProfileName>Adobe (Nikon AF-S NIKKOR 14-24mm f/2.8G ED)</stCamera:ProfileName>
+                  <stCamera:Make>NIKON CORPORATION</stCamera:Make>
+                  <stCamera:Model>NIKON D3X</stCamera:Model>
+                  <stCamera:Lens>14.0-24.0 mm f/2.8</stCamera:Lens>
+                  <stCamera:LensID>146</stCamera:LensID>
+                  <stCamera:LensInfo>140/10 240/10 28/10 28/10</stCamera:LensInfo>
+                  <stCamera:ImageWidth>6048.000000</stCamera:ImageWidth>
+                  <stCamera:ImageLength>4032.000000</stCamera:ImageLength>
+                  <stCamera:FocalLength>18.000000</stCamera:FocalLength>
+                  <stCamera:ApertureValue>6.918863</stCamera:ApertureValue>
+                  <stCamera:LensPrettyName>Nikon AF-S NIKKOR 14-24mm f/2.8G ED</stCamera:LensPrettyName>
+                  <stCamera:CameraPrettyName>NIKON D3X</stCamera:CameraPrettyName>
+                  <stCamera:CameraRawProfile>False</stCamera:CameraRawProfile>
+                  <stCamera:FocusDistance>0.708619</stCamera:FocusDistance>
+                  <stCamera:SensorFormatFactor>1.000000</stCamera:SensorFormatFactor>
+                  <stCamera:PerspectiveModel rdf:parseType="Resource">
+                     <stCamera:Version>2</stCamera:Version>
+                     <stCamera:FocalLengthX>0.319265</stCamera:FocalLengthX>
+                     <stCamera:FocalLengthY>0.319265</stCamera:FocalLengthY>
+                     <stCamera:ImageXCenter>0.502970</stCamera:ImageXCenter>
+                     <stCamera:ImageYCenter>0.504482</stCamera:ImageYCenter>
+                     <stCamera:RadialDistortParam1>-0.005184</stCamera:RadialDistortParam1>
+                     <stCamera:ResidualMeanError>0.000332</stCamera:ResidualMeanError>
+                     <stCamera:ResidualStandardDeviation>0.000212</stCamera:ResidualStandardDeviation>
+                     <stCamera:ChromaticGreenModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.319301</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.319301</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.502954</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.504502</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.005180</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000330</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000211</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticGreenModel>
+                     <stCamera:ChromaticRedGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000083</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.319301</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.319301</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.502954</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.504502</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>0.000060</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000331</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000211</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticRedGreenModel>
+                     <stCamera:ChromaticBlueGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000587</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.319301</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.319301</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.502954</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.504502</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.000121</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000329</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000212</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticBlueGreenModel>
+                     <stCamera:VignetteModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.319265</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.319265</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.502970</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.504482</stCamera:ImageYCenter>
+                        <stCamera:VignetteModelParam1>-0.093788</stCamera:VignetteModelParam1>
+                        <stCamera:VignetteModelParam2>0.011945</stCamera:VignetteModelParam2>
+                        <stCamera:VignetteModelParam3>-0.002522</stCamera:VignetteModelParam3>
+                        <stCamera:ResidualMeanError>0.017265</stCamera:ResidualMeanError>
+                     </stCamera:VignetteModel>
+                  </stCamera:PerspectiveModel>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <stCamera:Author>Adobe (www.adobe.com)</stCamera:Author>
+                  <stCamera:ProfileName>Adobe (Nikon AF-S NIKKOR 14-24mm f/2.8G ED)</stCamera:ProfileName>
+                  <stCamera:Make>NIKON CORPORATION</stCamera:Make>
+                  <stCamera:Model>NIKON D3X</stCamera:Model>
+                  <stCamera:Lens>14.0-24.0 mm f/2.8</stCamera:Lens>
+                  <stCamera:LensID>146</stCamera:LensID>
+                  <stCamera:LensInfo>140/10 240/10 28/10 28/10</stCamera:LensInfo>
+                  <stCamera:ImageWidth>6048.000000</stCamera:ImageWidth>
+                  <stCamera:ImageLength>4032.000000</stCamera:ImageLength>
+                  <stCamera:FocalLength>24.000000</stCamera:FocalLength>
+                  <stCamera:ApertureValue>6.918863</stCamera:ApertureValue>
+                  <stCamera:LensPrettyName>Nikon AF-S NIKKOR 14-24mm f/2.8G ED</stCamera:LensPrettyName>
+                  <stCamera:CameraPrettyName>NIKON D3X</stCamera:CameraPrettyName>
+                  <stCamera:CameraRawProfile>False</stCamera:CameraRawProfile>
+                  <stCamera:FocusDistance>0.456572</stCamera:FocusDistance>
+                  <stCamera:SensorFormatFactor>1.000000</stCamera:SensorFormatFactor>
+                  <stCamera:PerspectiveModel rdf:parseType="Resource">
+                     <stCamera:Version>2</stCamera:Version>
+                     <stCamera:FocalLengthX>0.221876</stCamera:FocalLengthX>
+                     <stCamera:FocalLengthY>0.221876</stCamera:FocalLengthY>
+                     <stCamera:ImageXCenter>0.504516</stCamera:ImageXCenter>
+                     <stCamera:ImageYCenter>0.538311</stCamera:ImageYCenter>
+                     <stCamera:RadialDistortParam1>-0.000279</stCamera:RadialDistortParam1>
+                     <stCamera:ResidualMeanError>0.000266</stCamera:ResidualMeanError>
+                     <stCamera:ResidualStandardDeviation>0.000182</stCamera:ResidualStandardDeviation>
+                     <stCamera:ChromaticGreenModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.222945</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.222945</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.504520</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.538274</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.000284</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000265</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000181</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticGreenModel>
+                     <stCamera:ChromaticRedGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000130</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.222945</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.222945</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.504520</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.538274</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>0.000019</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000266</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000181</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticRedGreenModel>
+                     <stCamera:ChromaticBlueGreenModel rdf:parseType="Resource">
+                        <stCamera:ScaleFactor>1.000279</stCamera:ScaleFactor>
+                        <stCamera:FocalLengthX>0.222945</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.222945</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.504520</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.538274</stCamera:ImageYCenter>
+                        <stCamera:RadialDistortParam1>-0.000006</stCamera:RadialDistortParam1>
+                        <stCamera:ResidualMeanError>0.000264</stCamera:ResidualMeanError>
+                        <stCamera:ResidualStandardDeviation>0.000183</stCamera:ResidualStandardDeviation>
+                     </stCamera:ChromaticBlueGreenModel>
+                     <stCamera:VignetteModel rdf:parseType="Resource">
+                        <stCamera:FocalLengthX>0.221876</stCamera:FocalLengthX>
+                        <stCamera:FocalLengthY>0.221876</stCamera:FocalLengthY>
+                        <stCamera:ImageXCenter>0.504516</stCamera:ImageXCenter>
+                        <stCamera:ImageYCenter>0.538311</stCamera:ImageYCenter>
+                        <stCamera:VignetteModelParam1>-0.032443</stCamera:VignetteModelParam1>
+                        <stCamera:ResidualMeanError>0.019478</stCamera:ResidualMeanError>
+                     </stCamera:VignetteModel>
                   </stCamera:PerspectiveModel>
                </rdf:li>
             </rdf:Seq>
