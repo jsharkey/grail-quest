@@ -20,15 +20,18 @@ var context = canvas.getContext('2d');
 var x = 2964;
 var y = 2780;
 
+x = 3742;
+y= 982;
+
 // 1036,2684
 // 2964,2780
 
-var frame = -1;
+var frame = -5;
 
 var img = new Image();
 
 function draw() {
-    var b = 10;
+    var b = 2;
     xx = (-x * b) + 500;
     yy = (-y * b) + 500;
     ww = img.width * b;
@@ -49,12 +52,13 @@ function draw() {
 img.onload = draw;
 
 function next_frame() {
-    frame += 1;
+    frame += 10;
     fr = frame;
     if (fr < 10) fr = "0" + fr;
 
     out.value = out.value + "\n" + x + "\t" + y + "\t" + img.src;
-    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+//    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+    img.src = "file:///home/jsharkey/grail-quest/rt"+fr+".jpg";
 }
 
 function keyz(e) {
