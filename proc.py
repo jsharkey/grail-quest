@@ -3,6 +3,42 @@ import sys
 import collections
 import math
 
+BEST_GUESS = 0.14775168
+
+# python /bandroid/lapse/100EOS5D/grail-quest/proc.py </bandroid/lapse/100EOS5D/grail-quest/res2.txt  |sort
+# avconv -r 10  -i "%02d.jpg.post.jpg" out2.mp4
+
+def correct(paramA, pt):
+    paramB=0
+    paramC=0
+    paramD=0
+
+    width=5760
+    height=3840
+    x,y = pt
+
+    d = min(width, height) / 2
+
+    centerX = (width) / 2.0
+    centerY = (height) / 2.0
+
+    deltaX = (x - centerX) / d
+    deltaY = (y - centerY) / d
+
+    dstR = math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    srcR = (paramA * dstR * dstR * dstR + paramB * dstR * dstR + paramC * dstR + paramD) - dstR
+
+    factor = abs(dstR / srcR);
+
+    srcXd = centerX + (deltaX * factor * d);
+    srcYd = centerY + (deltaY * factor * d);
+
+    return (srcXd, srcYd)
+
+
+
+
+
 pts = collections.defaultdict(list)
 
 for line in sys.stdin:
@@ -11,11 +47,14 @@ for line in sys.stdin:
     x, y, name = line.split("\t")
     x = int(x)
     y = int(y)
+    
+    x2,y2 = correct(BEST_GUESS, (x,y))
+    print "%d,%d -> %d,%d" % (x,y,x2,y2)
 
     name = name.strip()
     name = name[-6:]
     
-    pts[name].append((x,y))
+    pts[name].append((x2,y2))
 
 
 # 1048,2681
@@ -43,4 +82,5 @@ for p in pts:
     ang -= defang
     ang = -ang
 
+    print """rawtherapee -o %s.distort.jpg -p distort.pp3 -c %s &""" % (p, p)
     print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)

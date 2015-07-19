@@ -17,18 +17,28 @@ var canvas = document.getElementById('c');
 var out = document.getElementById('out');
 var context = canvas.getContext('2d');
 
-var x = 2964;
-var y = 2780;
-
 // 1036,2684
 // 2964,2780
+
+var x=2566, y=2873;
+
+/*
+
+on 02.jpg:
+
+var x=3329, y=2917;
+var x=706, y=2829;
+var x=2057, y=2413;
+var x=2566, y=2873;
+
+*/
 
 var frame = -1;
 
 var img = new Image();
 
 function draw() {
-    var b = 10;
+    var b = 5;
     xx = (-x * b) + 500;
     yy = (-y * b) + 500;
     ww = img.width * b;
@@ -53,7 +63,7 @@ function next_frame() {
     fr = frame;
     if (fr < 10) fr = "0" + fr;
 
-    out.value = out.value + "\n" + x + "\t" + y + "\t" + img.src;
+    out.value = out.value + "\n" + Math.round(x) + "\t" + Math.round(y) + "\t" + img.src;
     img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
 }
 
@@ -74,7 +84,15 @@ function keyz(e) {
 
 }
 
+function clickz(e) {
+    x += (e.clientX - 500) / 5;
+    y += (e.clientY - 500) / 5;
+    next_frame();
+}
+
 window.addEventListener( "keypress", keyz, false );
+window.addEventListener( "click", clickz );
+
 
 </script>
 
