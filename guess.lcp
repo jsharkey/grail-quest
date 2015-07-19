@@ -17,19 +17,21 @@
                   <stCamera:ImageWidth>5760.000000</stCamera:ImageWidth>
                   <stCamera:ImageLength>3840.000000</stCamera:ImageLength>
                   <stCamera:FocalLength>50.000000</stCamera:FocalLength>
-                  <stCamera:ApertureValue>6.918863</stCamera:ApertureValue>
+                  <stCamera:ApertureValue>4</stCamera:ApertureValue>
                   <stCamera:LensPrettyName>aNikon AF-S NIKKOR 14-24mm f/2.8G ED</stCamera:LensPrettyName>
                   <stCamera:CameraPrettyName>aNIKON D3X</stCamera:CameraPrettyName>
                   <stCamera:CameraRawProfile>False</stCamera:CameraRawProfile>
-                  <stCamera:FocusDistance>0.795214</stCamera:FocusDistance>
+                  <!-- <stCamera:FocusDistance>0.795214</stCamera:FocusDistance> -->
                   <stCamera:SensorFormatFactor>1.000000</stCamera:SensorFormatFactor>
                   <stCamera:PerspectiveModel rdf:parseType="Resource">
                      <stCamera:Version>2</stCamera:Version>
                      <stCamera:ImageXCenter>0.50</stCamera:ImageXCenter>
                      <stCamera:ImageYCenter>0.50</stCamera:ImageYCenter>
-                     <stCamera:RadialDistortParam1>-0.14775168</stCamera:RadialDistortParam1>
+                     <stCamera:RadialDistortParam1>-0.10705000</stCamera:RadialDistortParam1>
+                     <!--
                      <stCamera:ResidualMeanError>0.000345</stCamera:ResidualMeanError>
                      <stCamera:ResidualStandardDeviation>0.000194</stCamera:ResidualStandardDeviation>
+                     -->
                   </stCamera:PerspectiveModel>
                </rdf:li>
             </rdf:Seq>

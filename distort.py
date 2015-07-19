@@ -42,7 +42,7 @@ for two given exact same points, the *distance* should be the same, but not nece
 #sqrt((5760*0.8)^2 + (3840*0.8)^2)
 #rad = 5538.12675911
 
-import math
+import math, sys, collections
 
 
 def dist(a, b):
@@ -71,15 +71,18 @@ def correct(paramA, pt):
     deltaX = (x - centerX) / d
     deltaY = (y - centerY) / d
 
+    print deltaX, deltaY
+
     dstR = math.sqrt(deltaX * deltaX + deltaY * deltaY)
 
     #print (paramA * dstR * dstR * dstR + paramB * dstR * dstR + paramC * dstR + paramD)
     srcR = (paramA * dstR * dstR * dstR + paramB * dstR * dstR + paramC * dstR + paramD) - dstR
 
     # if we already have dst, need to work backwards
-    #print dstR, "-->", srcR
+    print dstR, "-->", srcR
 
     factor = abs(dstR / srcR);
+    print factor
 
     srcXd = centerX + (deltaX * factor * d);
     srcYd = centerY + (deltaY * factor * d);
@@ -88,6 +91,7 @@ def correct(paramA, pt):
     return (srcXd, srcYd)
 
 
+"""
 early1 = (3219,2864)
 early2 = (2510,2907)
 mid1 = (3212,2821)
@@ -96,6 +100,7 @@ late1 = (3195,2764)
 late2 = (2491,2762)
 guess = 0.14775168
 jump = 0.1
+"""
 
 """
 early1 = (2136,2790)
@@ -125,7 +130,65 @@ jump = 0.0000001
 """
 
 
+pts = collections.defaultdict(list)
 
+for line in sys.stdin:
+    if len(line) < 5: continue
+
+    x, y, name = line.split("\t")
+    x = int(x)
+    y = int(y)
+
+    name = name.strip()
+    name = name[-6:]
+    
+    pts[name].append((x,y))
+
+"""
+import numpy
+
+paramA = 0.107
+delta = 0.000001
+best = 1024
+while paramA < 1:
+    paramA += delta
+
+    calc_dist = []
+    for name in pts.keys():
+        a, b = pts[name]
+        a = correct(-paramA, a)
+        b = correct(-paramA, b)
+        calc_dist.append(dist(a, b))
+
+    # looking to minimize stddev
+    dev = numpy.std(calc_dist)
+    if dev < best:
+        best = dev
+        #print calc_dist
+        print "paramA=%0.8f, dev=%0.8f" % (paramA, dev)
+"""
+
+# 10.jpg --> 270
+
+def round(p):
+    x,y=p
+    return (int(x),int(y))
+
+paramA = 0.10705000
+for name in sorted(pts.keys()):
+    a, b = pts[name]
+    print name
+    ax = correct(-paramA, a)
+    bx = correct(-paramA, b)
+    print "\t", a, "-->", round(ax)
+    print "\t", b, "-->", round(bx)
+
+# BEST FIT: paramA=0.10705000, dev=1.42170719
+
+
+
+
+"""
 paramA = guess-jump
 while paramA < guess+jump:
 
@@ -148,6 +211,8 @@ while paramA < guess+jump:
 
 
 print correct((0,0))
+"""
+
 
 
 """

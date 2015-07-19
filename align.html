@@ -17,6 +17,9 @@ var canvas = document.getElementById('c');
 var out = document.getElementById('out');
 var context = canvas.getContext('2d');
 
+x = 3742;
+y= 982;
+
 // 1036,2684
 // 2964,2780
 
@@ -33,7 +36,6 @@ var x=2566, y=2873;
 
 */
 
-var frame = -1;
 
 var img = new Image();
 
@@ -59,12 +61,13 @@ function draw() {
 img.onload = draw;
 
 function next_frame() {
-    frame += 1;
+    frame += 10;
     fr = frame;
     if (fr < 10) fr = "0" + fr;
 
     out.value = out.value + "\n" + Math.round(x) + "\t" + Math.round(y) + "\t" + img.src;
-    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+//    img.src = "file:///bandroid/lapse2/stage/"+fr+".jpg";
+    img.src = "file:///home/jsharkey/grail-quest/rt"+fr+".jpg";
 }
 
 function keyz(e) {

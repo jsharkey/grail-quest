@@ -1,0 +1,280 @@
+# HG changeset patch
+# User Jeff Sharkey <jsharkey@jsharkey.org>
+# Date 1437288716 25200
+#      Sat Jul 18 23:51:56 2015 -0700
+# Node ID 0754bb7911c84ae4bb947608b52d275f19c09ec7
+# Parent  5a88cf936723258e9fb3b973c6d2d9b31ff66ec5
+Hacking camera params.
+
+diff -r 5a88cf936723 -r 0754bb7911c8 rtengine/iptransform.cc
+--- a/rtengine/iptransform.cc	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtengine/iptransform.cc	Sat Jul 18 23:51:56 2015 -0700
+@@ -79,6 +79,9 @@
+ 	for (size_t i=0; i<src.size(); i++) {
+         double x_d=src[i].x, y_d=src[i].y;
+         if (pLCPMap && params->lensProf.useDist) pLCPMap->correctDistortion(x_d,y_d);  // must be first transform
++        
++        x_d += params->rotate.xshift;
++        y_d += params->rotate.yshift;
+ 
+ 		y_d = ascale * (y_d - h2);
+ 		x_d = ascale * (x_d - w2);
+@@ -613,11 +616,19 @@
+             bool enableCA = enableLCPCA || needsCA();
+ 
+ 	// main cycle
+-	bool darkening = (params->vignetting.amount <= 0.0);
++
++                /** /
++            sx = params->rotate.xshift;
++            sy = params->rotate.yshift;
++            /**/
++
++    printf("\nOMG CHANGED!! rot=%f shift=%f \n", params->rotate.degree, params->rotate.xshift);
++    bool darkening = (params->vignetting.amount <= 0.0);
+ 	#pragma omp parallel for if (multiThread)
+     for (int y=0; y<transformed->height; y++) {
+         for (int x=0; x<transformed->width; x++) {
+             double x_d=x,y_d=y;
++            
+             if (enableLCPDist) pLCPMap->correctDistortion(x_d,y_d);  // must be first transform
+ 
+             x_d = ascale * (x_d + cx - w2);		// centering x coord & scale
+@@ -643,6 +654,11 @@
+             double Dxc = x_d * cost - y_d * sint;
+             double Dyc = x_d * sint + y_d * cost;
+ 
++            /** /
++            Dxc += params->rotate.xshift;
++            Dyc += params->rotate.yshift;
++            /**/
++
+             // distortion correction
+             double s = 1;
+             if (needsDist) {
+@@ -657,6 +673,7 @@
+                 r2=sqrt(vig_Dx*vig_Dx + vig_Dy*vig_Dy);
+             }
+ 
++
+             for (int c=0; c < (enableCA ? 3 : 1); c++) {
+                 double Dx = Dxc * (s + chDist[c]);
+                 double Dy = Dyc * (s + chDist[c]);
+@@ -664,6 +681,11 @@
+                 // de-center
+                 Dx += w2; Dy += h2;
+ 
++                /*
++                Dx += params->rotate.xshift;
++                Dy += params->rotate.yshift;
++                */
++                
+                 // LCP CA
+                 if (enableLCPCA) pLCPMap->correctCA(Dx,Dy,c);
+ 
+diff -r 5a88cf936723 -r 0754bb7911c8 rtengine/lcp.cc
+--- a/rtengine/lcp.cc	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtengine/lcp.cc	Sat Jul 18 23:51:56 2015 -0700
+@@ -148,7 +148,30 @@
+     enableCA = !vignette && focusDist>0;
+ }
+ 
++#include <math.h>
++
+ void LCPMapper::correctDistortion(double& x, double& y) const {
++
++    /*
++     * 10.jpg
++-0.9375 0.361979166667
++1.00495530602 --> -1.11360460143
++0.902434584707
++
++0.0578125 0.4125
++0.416531553614 --> -0.424267801736
++0.981765648749
++    (1080, 2615) --> (1255, 2547)
++    (2991, 2712) --> (2988, 2697)
++
++     */
++    int ix = (int)x;
++    int iy = (int)y;
++    
++    bool log = (x==1080 && y==2615) || (x==2991 && y==2712);
++    if (log) printf("input (%f, %f)\n", x, y);
++    
++#if 0
+     double xd=(x-mc.x0)/mc.fx, yd=(y-mc.y0)/mc.fy;
+ 
+     const float* aDist = mc.param;
+@@ -163,6 +186,44 @@
+ 
+     x = xnew * mc.fx + mc.x0;
+     y = ynew * mc.fy + mc.y0;
++#else
++    
++        double paramA=-0.10705000;
++    double paramB=0;
++    double paramC=0;
++    double paramD=0;
++
++    double width=5760;
++    double height=3840;
++
++    double d = min(width, height) / 2;
++
++    double centerX = (width) / 2.0;
++    double centerY = (height) / 2.0;
++
++    double deltaX = (x - centerX) / d;
++    double deltaY = (y - centerY) / d;
++
++    if (log) printf("delta (%f, %f)\n", deltaX, deltaY);
++
++    double dstR = sqrt(deltaX * deltaX + deltaY * deltaY);
++    double srcR = (paramA * dstR * dstR * dstR + paramB * dstR * dstR + paramC * dstR + paramD) - dstR;
++    
++    if (log) printf("dst (%f, %f)\n", dstR, srcR);
++
++    double factor = abs(dstR / srcR);
++
++    if (log) printf("factor (%f)\n", factor);
++
++    double srcXd = centerX + (deltaX * factor * d);
++    double srcYd = centerY + (deltaY * factor * d);
++    
++    x= srcXd;
++    y= srcYd;
++    
++#endif
++    if (log) printf("output (%f, %f)\n", x, y);
++    
+ }
+ 
+ void LCPMapper::correctCA(double& x, double& y, int channel) const {
+@@ -323,7 +384,7 @@
+ 
+     // find the frames with the least distance, focal length wise
+     LCPPersModel *pLow=NULL, *pHigh=NULL;
+-
++
+     float focalLengthLog=log(focalLength); //, apertureLog=aperture>0 ? log(aperture) : 0;
+     float focusDistLog=focusDist>0? log(focusDist)+euler : 0;
+ 
+@@ -499,7 +560,7 @@
+         } else if (!strcmp("ChromaticBlueGreenModel",src)) {
+             pProf->pCurCommon=&pProf->pCurPersModel->chromBG;
+             parseAttr=true;
+-        } else if (!strcmp("VignetteModel",src)) {
++        } else if (!strcmp("VignetteModel",src)) {
+             pProf->pCurCommon=&pProf->pCurPersModel->vignette;
+             parseAttr=true;
+         }
+@@ -589,8 +650,8 @@
+         pProf->pCurCommon->scaleFac=atof(raw);
+     else if (!strcmp("ResidualMeanError",tag)) 
+         pProf->pCurCommon->meanErr=atof(raw);
+-    else if (!strcmp("RadialDistortParam1",tag) || !strcmp("VignetteModelParam1",tag))
+-        pProf->pCurCommon->param[0]=atof(raw);
++    else if (!strcmp("RadialDistortParam1",tag) || !strcmp("VignetteModelParam1",tag))
++        pProf->pCurCommon->param[0]=atof(raw);
+     else if (!strcmp("RadialDistortParam2",tag) || !strcmp("VignetteModelParam2",tag)) 
+         pProf->pCurCommon->param[1]=atof(raw);
+     else if (!strcmp("RadialDistortParam3",tag) || !strcmp("VignetteModelParam3",tag))
+diff -r 5a88cf936723 -r 0754bb7911c8 rtengine/procparams.cc
+--- a/rtengine/procparams.cc	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtengine/procparams.cc	Sat Jul 18 23:51:56 2015 -0700
+@@ -930,6 +930,8 @@
+     commonTrans.autofill = true;
+ 
+     rotate.degree       = 0;
++    rotate.xshift = 0;
++    rotate.yshift= 0;
+ 
+     distortion.amount     = 0;
+     
+@@ -1538,6 +1540,8 @@
+ 
+     // save rotate
+     if (!pedited || pedited->rotate.degree)          keyFile.set_double  ("Rotation", "Degree", rotate.degree);
++    if (!pedited || pedited->rotate.xshift)          keyFile.set_double  ("Rotation", "xshift", rotate.xshift);
++    if (!pedited || pedited->rotate.yshift)          keyFile.set_double  ("Rotation", "yshift", rotate.yshift);
+ 
+     // save distortion
+     if (!pedited || pedited->distortion.amount)      keyFile.set_double  ("Distortion", "Amount", distortion.amount);
+@@ -2407,7 +2411,13 @@
+     // load rotate
+ if (keyFile.has_group ("Rotation")) {
+     if (keyFile.has_key ("Rotation", "Degree"))   { rotate.degree = keyFile.get_double ("Rotation", "Degree"); if (pedited) pedited->rotate.degree = true; }
++    if (keyFile.has_key ("Rotation", "xshift"))   { rotate.xshift = keyFile.get_double ("Rotation", "xshift"); if (pedited) pedited->rotate.xshift = true; }
++    if (keyFile.has_key ("Rotation", "yshift"))   { rotate.yshift = keyFile.get_double ("Rotation", "yshift"); if (pedited) pedited->rotate.yshift = true; }
++printf("\nxshift=%f xshift=%f rotation=%f\n", rotate.xshift, rotate.yshift, rotate.degree);
+ }
++
++
++
+     // load commonTrans
+ if (keyFile.has_group ("Common Properties for Transformations")) {
+     if (keyFile.has_key ("Common Properties for Transformations", "AutoFill"))   { commonTrans.autofill = keyFile.get_boolean ("Common Properties for Transformations", "AutoFill"); if (pedited) pedited->commonTrans.autofill = true; }
+@@ -3095,6 +3105,8 @@
+ 		&& coarse.hflip == other.coarse.hflip
+ 		&& coarse.vflip == other.coarse.vflip
+ 		&& rotate.degree == other.rotate.degree
++		&& rotate.xshift == other.rotate.xshift
++		&& rotate.yshift == other.rotate.yshift
+ 		&& commonTrans.autofill == other.commonTrans.autofill
+ 		&& distortion.amount == other.distortion.amount
+ 		&& lensProf.lcpFile == other.lensProf.lcpFile
+diff -r 5a88cf936723 -r 0754bb7911c8 rtengine/procparams.h
+--- a/rtengine/procparams.h	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtengine/procparams.h	Sat Jul 18 23:51:56 2015 -0700
+@@ -664,6 +664,8 @@
+     
+     public:
+         double  degree;
++        double xshift;
++        double yshift;
+ };
+ 
+ /**
+diff -r 5a88cf936723 -r 0754bb7911c8 rtgui/paramsedited.cc
+--- a/rtgui/paramsedited.cc	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtgui/paramsedited.cc	Sat Jul 18 23:51:56 2015 -0700
+@@ -241,6 +241,8 @@
+ 	coarse.vflip = v;
+ 	commonTrans.autofill = v;
+ 	rotate.degree = v;
++    rotate.xshift = v;
++    rotate.yshift = v;
+ 	distortion.amount = v;
+ 	lensProf.lcpFile = v;
+ 	lensProf.useDist = v;
+@@ -674,6 +676,8 @@
+         coarse.vflip = coarse.vflip && p.coarse.vflip == other.coarse.vflip;
+         commonTrans.autofill = commonTrans.autofill && p.commonTrans.autofill == other.commonTrans.autofill;
+         rotate.degree = rotate.degree && p.rotate.degree == other.rotate.degree;
++        rotate.xshift = rotate.xshift && p.rotate.xshift == other.rotate.xshift;
++        rotate.yshift = rotate.yshift && p.rotate.yshift == other.rotate.yshift;
+         distortion.amount = distortion.amount && p.distortion.amount == other.distortion.amount;
+         lensProf.lcpFile = lensProf.lcpFile && p.lensProf.lcpFile == other.lensProf.lcpFile;
+         lensProf.useDist = lensProf.useDist && p.lensProf.useDist == other.lensProf.useDist;
+@@ -1105,6 +1109,8 @@
+ 	if (coarse.vflip)						toEdit.coarse.vflip 	= mods.coarse.vflip;
+ 	if (commonTrans.autofill)				toEdit.commonTrans.autofill		= mods.commonTrans.autofill;
+ 	if (rotate.degree)						toEdit.rotate.degree 			= dontforceSet && options.baBehav[ADDSET_ROTATE_DEGREE] ? toEdit.rotate.degree + mods.rotate.degree : mods.rotate.degree;
++    if (rotate.xshift)                      toEdit.rotate.xshift            = mods.rotate.xshift;
++    if (rotate.yshift)                      toEdit.rotate.yshift            = mods.rotate.yshift;
+ 	if (distortion.amount)					toEdit.distortion.amount 		= dontforceSet && options.baBehav[ADDSET_DIST_AMOUNT] ? toEdit.distortion.amount + mods.distortion.amount : mods.distortion.amount;
+ 	if (lensProf.lcpFile)                   toEdit.lensProf.lcpFile         = mods.lensProf.lcpFile;
+     if (lensProf.useDist)                   toEdit.lensProf.useDist         = mods.lensProf.useDist;
+diff -r 5a88cf936723 -r 0754bb7911c8 rtgui/paramsedited.h
+--- a/rtgui/paramsedited.h	Wed Jul 08 12:14:16 2015 +0200
++++ b/rtgui/paramsedited.h	Sat Jul 18 23:51:56 2015 -0700
+@@ -343,6 +343,8 @@
+     
+     public:
+         bool degree;
++        bool xshift;
++        bool yshift;
+ };
+ 
+ class DistortionParamsEdited {

@@ -82,7 +82,6 @@ XX
 
 
 
-2964	2780	
 2973	2782	file:///bandroid/lapse2/stage/00.jpg
 2965	2781	file:///bandroid/lapse2/stage/01.jpg
 2993	2769	file:///bandroid/lapse2/stage/02.jpg
