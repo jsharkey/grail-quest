@@ -1,4 +1,22 @@
 
+#
+# Copyright (C) 2015 Jeff Sharkey, http://jsharkey.org/
+# All Rights Reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 import sys
 import collections
 import math, re
@@ -75,6 +93,7 @@ frames = sorted([ k for k in pts.keys() if len(pts[k]) == 4 ])
 
 print "== STAGE TWO =="
 
+"""
 A=[3307,2934,3299,2931,3329,2918,3312,2898,3310,2904,3336,2874,3348,2871,3333,2879,3326,2870,3346,2863,3324,2861,3325,2856,3340,2855,3308,2851,3340,2857,3337,2864,3335,2858,3330,2848,3322,2843,3335,2851,3317,2848,3307,2872,3312,2866,3326,2867,3331,2853,3298,2857,3317,2860,3318,2863,3315,2873,3330,2841,3335,2861,3333,2858,3338,2848,3333,2875,3300,2862,3291,2888,3296,2871,3311,2860,3284,2876,3324,2847,3313,2881,3321,2854,3306,2873,3304,2858,3303,2851,3311,2821,3322,2862,3332,2837,3293,2859,3327,2861,3320,2855,3313,2873,3302,2863,3300,2860,3318,2879,3312,2864,3312,2848,3314,2843,3281,2847,3323,2851,3274,2856,3310,2849,3290,2853,3310,2849,3308,2853,3268,2849,3271,2834,3289,2850,3291,2828,3299,2840,3321,2814,3322,2793,3278,2797,3319,2792,3312,2760,3262,2875,3294,2796]
 A=zip(A[::2], A[1::2])
 print "var set=", A.__repr__().replace("(", "[").replace(")", "]"), ";"
@@ -89,8 +108,17 @@ for i in range(len(A)):
     pts[frame]['B'] = B[i]
 
 frames = sorted([ k for k in pts.keys() if len(pts[k]) == 2 ])
+"""
 
-#exit()
+A={}
+for line in open("../best1.txt"):
+    i,j,x,y = line.split(" ")
+    A[int(j)] = (int(x),int(y))
+
+B={}
+for line in open("../best2.txt"):
+    i,j,x,y = line.split(" ")
+    B[int(j)] = (int(x),int(y))
 
 
 #A=[ for x in ]
@@ -199,18 +227,9 @@ def rot(p, ang):
 
 
 
-for p in sorted(pts):
-    if not p.endswith("jpg"): continue
-
-    #print p
-
-    #cx, cy = pts[p]['A']
-
-    x1, y1 = pts[p]['A']
-    x2, y2 = pts[p]['B']
-    
-    #print x1,y1
-
+for j in range(1,760):
+    x1, y1 = A[j]
+    x2, y2 = B[j]
     
     # always correct first
     x1, y1 = correct( (x1,y1) )
@@ -241,7 +260,7 @@ for p in sorted(pts):
     #ang = 0
     #ang += -2.71
 
-    with open("proc%s.pp3" % (p), 'w') as f:
+    with open("proc%04d.pp3" % (j), 'w') as f:
         f.write("""
 [Version]
 AppVersion=4.2.242
@@ -264,13 +283,14 @@ yshift=%f
 Amount=0
 
 [LensProfile]
-LCPFile=guess.lcp
+LCPFile=../guess.lcp
 UseDistortion=true
 UseVignette=false
 UseCA=false
 
 """ % (ang, -xd, -yd))
 
-    orig = (int(p[0:2])+17)*10
-    print "~/rt_default_release_patched/rawtherapee -p proc%s.pp3 -Y -o rt%s -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 &" % (p, p, orig)
+    #orig = (int(p[0:2])+17)*10
+    i=j+170
+    print "~/rt_default_release_patched/rawtherapee -p ../pass1.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)
