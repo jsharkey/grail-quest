@@ -27,6 +27,18 @@ knownA[587-170] = (3307,2847)
 knownA[757-170] = (3311,2862)
 knownA[893-170] = (3263,2786)
 
+knownB[322-170] = (729,2743)
+knownB[355-170] = (716,2730)
+knownB[387-170] = (702,2712)
+knownB[449-170] = (685,2713)
+knownB[602-170] = (659,2654)
+knownB[679-170] = (715,2644)
+knownB[734-170] = (716,2618)
+knownB[779-170] = (737,2583)
+knownB[789-170] = (710,2602)
+knownB[804-170] = (714,2586)
+knownB[839-170] = (706,2574)
+
 
 #for i in range(170,930):
 #    print "mv A_%04d.JPG a_%04d.jpg" % (i, i-170)
@@ -51,7 +63,7 @@ class App:
         self.frame_idx = 0
 
     def run(self):
-        px = 3307; py = 2934
+        px, py = knownB[0]
         while True:
             #time.sleep(0.1)
             ret, frame = self.cam.read()
@@ -111,24 +123,20 @@ class App:
                         print "\tfil", len(narrow), m2, s2
                         
                         px += m2[0]; py += m2[1]
-                        if self.frame_idx == 40:
-                            px = 3309; py = 2905
-                        if self.frame_idx == 50:
-                            px = 3336; py = 2874
-                        #print self.frame_idx, "-", int(px), int(py)
-
-                
+                                        
                 if self.frame_idx in knownB:
                     kx,ky = knownB[self.frame_idx]
                     print
-                    print "\t\test", int(round(px)),int(round(py))
-                    print "\t\tact", kx,ky
+                    print "\t\terror", (int(round(px))-kx), (int(round(py))-ky)
+                    #print "\t\test", int(round(px)),int(round(py))
+                    #print "\t\tact", kx,ky
                     print
                     px=kx;py=ky
                 elif M < 20 or N < M / 2:
                     print "------------------------------------> NEEDS LOVE <------------------------------------"
 
-                    
+                print "\tRES", self.frame_idx, int(round(px)), int(round(py))
+
                 #draw_str(vis, (20, 20), 'track count: %d' % len(self.tracks))
 
 
