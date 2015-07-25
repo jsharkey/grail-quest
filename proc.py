@@ -226,8 +226,29 @@ def rot(p, ang):
     return (xx,yy)
 
 
+target = float(8000)
+
+def delta(a,b):
+    return math.log(float(b)/float(a),2)
+
+exp = {}
+for line in open("../exp.txt"):
+    if "Name" in line: i = int(line[-9:-5])
+    if "Time" in line and "/" in line:
+        val = float(line[line.index("/")+1:].strip())
+        exp[i] = delta(target,val)
+
+width=5760
+height=3840
+
+left=0
+top=0
+right=width
+bottom=height
 
 for j in range(1,760):
+    i=j+170
+
     x1, y1 = A[j]
     x2, y2 = B[j]
     
@@ -260,11 +281,33 @@ for j in range(1,760):
     #ang = 0
     #ang += -2.71
 
+    # figure out bounds; middle of frame on each side
+    x,y=rot(correct((0,0)), -ang)
+    left=max(left,x)
+    top=max(top,y)
+    
+    x,y=rot(correct((0,height)), -ang)
+    left=max(left,x)
+    bottom=min(bottom,y)
+    
+    x,y=rot(correct((width,0)), -ang)
+    right=min(right,x)
+    top=max(top,y)
+    
+    x,y=rot(correct((width,height)), -ang)
+    right=min(right,x)
+    bottom=min(bottom,y)
+
+    ecomp = exp[i]
+
     with open("proc%04d.pp3" % (j), 'w') as f:
         f.write("""
 [Version]
 AppVersion=4.2.242
 Version=324
+
+[Exposure]
+Compensation=%f
 
 [Coarse Transformation]
 Rotate=0
@@ -273,6 +316,13 @@ VerticalFlip=true
 
 [Common Properties for Transformations]
 AutoFill=false
+
+[Crop]
+Enabled=true
+X=863
+Y=664
+W=4032
+H=2511
 
 [Rotation]
 Degree=%f
@@ -288,9 +338,12 @@ UseDistortion=true
 UseVignette=false
 UseCA=false
 
-""" % (ang, -xd, -yd))
+""" % (ecomp+4, ang, -xd, -yd))
 
     #orig = (int(p[0:2])+17)*10
-    i=j+170
-    print "~/rt_default_release_patched/rawtherapee -p ../pass1.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
+    # -p ../pass1.pp3
+    print "~/rt_default_release_patched/rawtherapee -p ../pass2.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)
+
+width=right-left; height=bottom-top
+print "x",int(left),"y",int(top),"w",int(width),"h",int(height)

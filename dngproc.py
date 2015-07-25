@@ -381,6 +381,7 @@ from progressbar import AnimatedMarker, Bar, BouncingBar, Counter, ETA, \
     ProgressBar, ReverseBar, RotatingMarker, \
     SimpleProgress, Timer
 
+"""
 re_ident = re.compile(
 	"Red:.+?mean: ([\d.]+).+?"
 	"Green:.+?mean: ([\d.]+).+?"
@@ -416,6 +417,7 @@ for i in range(len(files)):
 	pbar.update(i)
 
 pbar.finish()
+"""
 
 
 # Aim for the best brightness ramping over time

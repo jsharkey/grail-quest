@@ -18,5 +18,37 @@
 #
 
 
+import math
+
 # use blue sky to figure out consistent exposure
 # look at blue filter at y > 3000
+
+for line in open("best1.txt"):
+    i,j,x,y = line.split(" ")
+
+# Exposure Time                   : 1/3200
+# each "EV" doubles the shutter speed
+#File Name
+#Exposure Time
+
+# assuming target is 1/8000
+target = float(8000)
+
+def delta(a,b):
+    return math.log(float(b)/float(a),2)
+
+
+for line in open("exp.txt"):
+    if "Name" in line: i = int(line[-9:-5])
+    if "Time" in line and "/" in line:
+        val = float(line[line.index("/")+1:].strip())
+        
+        print i, val, delta(target,val)
+        
+
+
+
+#print delta(4000,8000)
+#print delta(8000,16000)
+#print delta(4000,16000)
+#print delta(8000,4000)
