@@ -27,6 +27,10 @@ knownA[587-170] = (3307,2847)
 knownA[757-170] = (3311,2862)
 knownA[893-170] = (3263,2786)
 
+knownA[357-170] = (3324,2856)
+knownA[549-170] = (3285,2858)
+knownA[840-170] = (3304,2850)
+
 knownB[322-170] = (729,2743)
 knownB[355-170] = (716,2730)
 knownB[387-170] = (702,2712)
@@ -58,12 +62,12 @@ class App:
         self.track_len = 2
         self.detect_interval = 1
         self.tracks = []
-        self.cam = cv2.VideoCapture("data/B_%04d.JPG") # video.create_capture(video_src)
+        self.cam = cv2.VideoCapture("data/A_%04d.JPG") # video.create_capture(video_src)
         #self.cam.set(cv.CV_CAP_PROP_POS_FRAMES, 170)
         self.frame_idx = 0
 
     def run(self):
-        px, py = knownB[0]
+        px, py = knownA[0]
         while True:
             #time.sleep(0.1)
             ret, frame = self.cam.read()
@@ -124,8 +128,8 @@ class App:
                         
                         px += m2[0]; py += m2[1]
                                         
-                if self.frame_idx in knownB:
-                    kx,ky = knownB[self.frame_idx]
+                if self.frame_idx in knownA:
+                    kx,ky = knownA[self.frame_idx]
                     print
                     print "\t\terror", (int(round(px))-kx), (int(round(py))-ky)
                     #print "\t\test", int(round(px)),int(round(py))

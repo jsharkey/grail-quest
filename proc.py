@@ -272,5 +272,5 @@ UseCA=false
 """ % (ang, -xd, -yd))
 
     orig = (int(p[0:2])+17)*10
-    print "~/rt_default_release_patched/rawtherapee -p proc%s.pp3 -Y -o rt%s -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (p, p, orig)
+    print "~/rt_default_release_patched/rawtherapee -p proc%s.pp3 -Y -o rt%s -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 &" % (p, p, orig)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)
