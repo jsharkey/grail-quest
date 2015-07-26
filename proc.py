@@ -297,6 +297,8 @@ for j in range(1,760):
     x,y=rot(correct((width,height)), -ang)
     right=min(right,x)
     bottom=min(bottom,y)
+    
+    #print "BOUND",j,int(top),int(left),int(bottom),int(right)
 
     ecomp = exp[i]
 
@@ -322,7 +324,7 @@ Enabled=true
 X=863
 Y=664
 W=4032
-H=2511
+H=2268
 
 [Rotation]
 Degree=%f
@@ -342,7 +344,7 @@ UseCA=false
 
     #orig = (int(p[0:2])+17)*10
     # -p ../pass1.pp3
-    print "~/rt_default_release_patched/rawtherapee -p ../pass2.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
+    print "~/rt_default_release_patched/rawtherapee -p ../pass3.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)
 
 width=right-left; height=bottom-top
