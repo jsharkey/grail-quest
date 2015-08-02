@@ -193,7 +193,7 @@ for line in f.split("\n"):
 def rot(p, ang):
     
     x,y=p
-    print x,y, "--> ", ang,
+    #print x,y, "--> ", ang,
     
     ang *= 0.0174532925
     width=5760
@@ -222,7 +222,7 @@ def rot(p, ang):
     yy = centerY + (yy * d);
     """
 
-    print "-->",  xx, yy
+    #print "-->",  xx, yy
     return (xx,yy)
 
 
@@ -245,6 +245,17 @@ left=0
 top=0
 right=width
 bottom=height
+
+redo = """
+R59A0084.CR2  R59A0203.CR2  R59A0322.CR2  R59A0409.CR2  R59A0479.CR2  R59A0585.CR2  R59A0658.CR2  R59A0705.CR2  R59A0793.CR2  R59A0879.CR2
+R59A0125.CR2  R59A0215.CR2  R59A0326.CR2  R59A0410.CR2  R59A0480.CR2  R59A0593.CR2  R59A0663.CR2  R59A0711.CR2  R59A0799.CR2  R59A0883.CR2
+R59A0135.CR2  R59A0252.CR2  R59A0336.CR2  R59A0420.CR2  R59A0498.CR2  R59A0611.CR2  R59A0670.CR2  R59A0715.CR2  R59A0819.CR2  R59A0885.CR2
+R59A0148.CR2  R59A0278.CR2  R59A0344.CR2  R59A0430.CR2  R59A0514.CR2  R59A0613.CR2  R59A0671.CR2  R59A0731.CR2  R59A0820.CR2  R59A0914.CR2
+R59A0167.CR2  R59A0283.CR2  R59A0346.CR2  R59A0451.CR2  R59A0516.CR2  R59A0621.CR2  R59A0674.CR2  R59A0757.CR2  R59A0844.CR2  R59A0930.CR2
+R59A0194.CR2  R59A0311.CR2  R59A0403.CR2  R59A0461.CR2  R59A0532.CR2  R59A0631.CR2  R59A0697.CR2  R59A0776.CR2  R59A0860.CR2  R59A0932.CR2
+R59A0199.CR2  R59A0320.CR2  R59A0404.CR2  R59A0464.CR2  R59A0583.CR2  R59A0652.CR2  R59A0703.CR2  R59A0786.CR2  R59A0868.CR2  R59A0936.CR2
+"""
+redo = re.split(r"[\s\n]+", redo)
 
 for j in range(1,760):
     i=j+170
@@ -324,7 +335,7 @@ Enabled=true
 X=863
 Y=664
 W=4032
-H=2268
+H=2511
 
 [Rotation]
 Degree=%f
@@ -342,9 +353,16 @@ UseCA=false
 
 """ % (ecomp+4, ang, -xd, -yd))
 
+    # 16:9 2268
+    # x 863 y 664 w 4032 h 2511
+    
     #orig = (int(p[0:2])+17)*10
     # -p ../pass1.pp3
-    print "~/rt_default_release_patched/rawtherapee -p ../pass3.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
+    
+    if "R59A%04d.CR2" % (i) not in redo:
+        continue
+    
+    print "~/rt_default_release_patched/rawtherapee -p ../pass2.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)
 
 width=right-left; height=bottom-top
