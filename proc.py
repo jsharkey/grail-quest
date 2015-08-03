@@ -120,6 +120,11 @@ for line in open("../best2.txt"):
     i,j,x,y = line.split(" ")
     B[int(j)] = (int(x),int(y))
 
+FINAL={}
+for line in open("../finalpush.txt"):
+    i,j,x,y = line.split(" ")
+    FINAL[int(j)] = (int(x),int(y))
+
 
 #A=[ for x in ]
 
@@ -262,7 +267,7 @@ for j in range(1,760):
 
     x1, y1 = A[j]
     x2, y2 = B[j]
-    
+
     # always correct first
     x1, y1 = correct( (x1,y1) )
     x2, y2 = correct( (x2,y2) )
@@ -311,6 +316,12 @@ for j in range(1,760):
     
     #print "BOUND",j,int(top),int(left),int(bottom),int(right)
 
+    if j in FINAL:
+        finalx, finaly = FINAL[j]
+    else:
+        finalx, finaly = (0,0)
+        print "OOPS"
+
     ecomp = exp[i]
 
     with open("proc%04d.pp3" % (j), 'w') as f:
@@ -332,10 +343,10 @@ AutoFill=false
 
 [Crop]
 Enabled=true
-X=863
-Y=664
+X=%d
+Y=%d
 W=4032
-H=2511
+H=2268
 
 [Rotation]
 Degree=%f
@@ -351,7 +362,7 @@ UseDistortion=true
 UseVignette=false
 UseCA=false
 
-""" % (ecomp+4, ang, -xd, -yd))
+""" % (ecomp+3, 863+finalx, 664+finaly, ang, -xd, -yd))
 
     # 16:9 2268
     # x 863 y 664 w 4032 h 2511
@@ -359,8 +370,8 @@ UseCA=false
     #orig = (int(p[0:2])+17)*10
     # -p ../pass1.pp3
     
-    if "R59A%04d.CR2" % (i) not in redo:
-        continue
+    #if "R59A%04d.CR2" % (i) not in redo:
+    #    continue
     
     print "~/rt_default_release_patched/rawtherapee -p ../pass2.pp3 -p proc%04d.pp3 -Y -o proc%04d.jpg -c /bandroid/lapse2/DCIM/101EOS5D/R59A%04d.CR2 " % (j,j,i)
     #print """convert %s -virtual-pixel black -distort ScaleRotateTranslate '%d,%d 1,1 %f 1048,2681' -rotate 180 %s.post.jpg &""" % (p, x1, y1, ang, p)

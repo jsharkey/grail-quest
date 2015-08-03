@@ -34,7 +34,8 @@ for line in open("../alignout.txt"):
 #parsed[0] = (675,2834)
 #parsed[665] = (749,2589)
 
-parsed[0] = (3307,2934)
+#parsed[0] = (3307,2934)
+parsed[0] = (2614,319)
 
 for i in range(170,930):
     j=i-170
@@ -43,8 +44,11 @@ for i in range(170,930):
     #print "convert %s/R59A%04d.JPG -crop 800x800+%d+%d A_%04d.JPG" % (BASE_PATH, i, x-400, y-600, j)
     #print "convert %s/R59A%04d.JPG -crop 400x400+%d+%d A_%04d.JPG" % (BASE_PATH, i, x-200, y-300, j)
     
-    x, y = parsed[j]
-    #print "convert %s/R59A%04d.JPG -crop 100x100+%d+%d AA_%04d.JPG" % (BASE_PATH, i, x-50, y-50, j)
+    x, y = parsed[0]
+    #print "convert %s/R59A%04d.JPG -crop 100x100+%d+%d FF_%04d.JPG" % (BASE_PATH, i, x-50, y-50, j)
+    #print "convert ../data2/proc%04d.jpg -crop 100x100+%d+%d FF_%04d.JPG" % (j, x-50, y-50, j)
+    
+    parsed[j] = parsed[0]
 
 #exit()
 
@@ -77,13 +81,14 @@ skip_long=50
 
 resolved = {}
 
-for i in range(170+skip,930,skip):
+for i in range(171+skip,930,skip):
     j=i-170
     #scipy.misc.imsave("delta_%04d.png" % (j), c)
 
-    a = scipy.misc.imread("AA_%04d.JPG" % (j-skip), flatten=True)
-    b = scipy.misc.imread("AA_%04d.JPG" % (j), flatten=True)
+    a = scipy.misc.imread("FF_%04d.JPG" % (j-skip), flatten=True)
+    b = scipy.misc.imread("FF_%04d.JPG" % (j), flatten=True)
     c = cross_image(a, b)
+    #scipy.misc.imsave("delta_%04d.png" % (j), c)
     y,x = np.unravel_index(np.argmax(c), c.shape)
     x-=50; y-=50
     dx+=x; dy+=y;
@@ -93,7 +98,7 @@ for i in range(170+skip,930,skip):
     rx-=dx; ry-=dy;
     
     if j-skip_long in resolved and j-skip_long>20:
-        a = scipy.misc.imread("AA_%04d.JPG" % (j-skip_long), flatten=True)
+        a = scipy.misc.imread("FF_%04d.JPG" % (j-skip_long), flatten=True)
         c = cross_image(a, b)
         y,x = np.unravel_index(np.argmax(c), c.shape)
         x-=50; y-=50
@@ -115,8 +120,13 @@ for i in range(170+skip,930,skip):
 
     resolved[j] = (rx,ry)
     
+    rx -= parsed[0][0]
+    ry -= parsed[0][1]
+    ry += 15
+    
     print i,j,rx,ry
     #print "convert %s/R59A%04d.JPG -crop 800x800+%d+%d A2_%04d.JPG" % (BASE_PATH, i, rx-400, ry-400, j)
+    print "convert ../data2/proc%04d.jpg -extent 4032x2511%+d%+d sun%04d.jpg" % (j, rx, ry, j)
 
 
 # 1048 +/- 200

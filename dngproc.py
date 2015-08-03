@@ -381,7 +381,10 @@ from progressbar import AnimatedMarker, Bar, BouncingBar, Counter, ETA, \
     ProgressBar, ReverseBar, RotatingMarker, \
     SimpleProgress, Timer
 
-"""
+
+
+
+
 re_ident = re.compile(
 	"Red:.+?mean: ([\d.]+).+?"
 	"Green:.+?mean: ([\d.]+).+?"
@@ -389,7 +392,7 @@ re_ident = re.compile(
 	"Overall:.+?mean: ([\d.]+).+?", re.DOTALL)
 
 # Quickly estimate luminance using DNG thumbnail
-files = [ "%08d.DNG" % (n) for n in range(16, 378) ]
+files = [ "proc%04d.jpg" % (n) for n in range(1, 760) ]
 
 # Quickly estimate luminance using DNG thumbnail
 
@@ -398,46 +401,56 @@ pbar = ProgressBar(widgets=widgets, maxval=len(files)).start()
 
 lum_in = []
 for i in range(len(files)):
-	dng = files[i]
-	thumb = "%s.thumb" % (dng)
-	if not os.path.isfile(thumb):
-		subprocess.check_output(["tiffcp", dng, thumb], stderr=subprocess.STDOUT)
-	stats = "%s.stats" % (dng)
-	if not os.path.isfile(stats):
-		res = subprocess.check_output(["identify", "-verbose", thumb], stderr=subprocess.STDOUT)
-		with open(stats, 'w') as f:
-			f.write(res)
-	else:
-		with open(stats, 'r') as f:
-			res = f.read()
+    dng = files[i]
+    #thumb = "%s.thumb" % (dng)
+    #if not os.path.isfile(thumb):
+    #	subprocess.check_output(["tiffcp", dng, thumb], stderr=subprocess.STDOUT)
+    thumb = dng
+    stats = "%s.stats" % (dng)
+    if not os.path.isfile(stats):
+        print("identify -verbose %s > %s.stats" % (dng, dng))
+        
+        #res = subprocess.check_output(["identify", "-verbose", thumb], stderr=subprocess.STDOUT)
+        #with open(stats, 'w') as f:
+        #	f.write(res)
+    else:
+        with open(stats, 'r') as f:
+            res = f.read()
 
-	r, g, b, over = re_ident.search(res).groups()
-	lum = 0.2126 * float(r) + 0.7152 * float(g) + 0.0722 * float(b)
-	lum_in.append(lum)
-	pbar.update(i)
+    r, g, b, over = re_ident.search(res).groups()
+    lum = 0.2126 * float(r) + 0.7152 * float(g) + 0.0722 * float(b)
+    lum_in.append(lum)
+    pbar.update(i)
 
 pbar.finish()
-"""
+
+#exit()
 
 
 # Aim for the best brightness ramping over time
-lum_out = signal.savgol_filter(lum_in, 101, 5)
+lum_out = savgol_filter(lum_in, 101, 5)
 
 
 # echo "set terminal wxt size 1024,768; plot 'comp.plot' using 2 with lines, 'comp.plot' using 3 with lines" | gnuplot -p
 with open("comp.plot", 'w') as plot:
-	for i in range(len(lum_in)):
-		exp_in = (0.03353246037*lum_in[i])-1.3650011411500929
-		exp_out = (0.03353246037*lum_out[i])-1.3650011411500929
-		exp_delta = 1 + (exp_out - exp_in)
-
-		print >>plot, files[i], "\t", lum_in[i], "\t", lum_out[i], "\t", exp_delta
-		with open("%s.pp3" % (files[i]), 'w') as f:
-			f.write("""
+    for i in range(len(lum_in)):
+        exp_in = (0.03353246037*lum_in[i])-1.3650011411500929
+        exp_out = (0.03353246037*lum_out[i])-1.3650011411500929
+        exp_delta = 1 + (exp_out - exp_in)
+        
+        plot.write("\t".join([files[i], str(lum_in[i]), str(lum_out[i]), str(exp_delta)]))
+        plot.write("\n")
+        #print >>plot, files[i], "\t", lum_in[i], "\t", lum_out[i], "\t", exp_delta
+        with open("%s.pp3" % (files[i]), 'w') as f:
+            f.write("""
 [Exposure]
 Compensation=%f
-""" % (exp_delta))
+""" % (exp_delta-1))
 
+        fx = files[i]
+        print("rawtherapee -o exp%s -p %s.pp3 -c %s" % (fx,fx,fx))
+
+exit()
 
 widgets = ['develop'.ljust(20), '(', Counter(), '/', str(len(files)), ') ', Percentage(), ' ', Bar(), ' ', ETA()]
 pbar = ProgressBar(widgets=widgets, maxval=len(files)).start()
