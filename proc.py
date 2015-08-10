@@ -236,12 +236,29 @@ target = float(8000)
 def delta(a,b):
     return math.log(float(b)/float(a),2)
 
+"""
+1/8000 300 Compensation=2.678072
+1/2500 500 Compensation=1.321928
+
+File Name                       : R59A0379.JPG
+Exposure Time                   : 1/5000
+File Name                       : R59A0380.JPG
+Exposure Time                   : 1/8000
+"""
+
+#print delta(8000,2500)
+# -1.67807190511
+
+
 exp = {}
 for line in open("../exp.txt"):
     if "Name" in line: i = int(line[-9:-5])
     if "Time" in line and "/" in line:
         val = float(line[line.index("/")+1:].strip())
         exp[i] = delta(target,val)
+
+print exp[300]
+print exp[500]
 
 width=5760
 height=3840
@@ -261,6 +278,8 @@ R59A0194.CR2  R59A0311.CR2  R59A0403.CR2  R59A0461.CR2  R59A0532.CR2  R59A0631.C
 R59A0199.CR2  R59A0320.CR2  R59A0404.CR2  R59A0464.CR2  R59A0583.CR2  R59A0652.CR2  R59A0703.CR2  R59A0786.CR2  R59A0868.CR2  R59A0936.CR2
 """
 redo = re.split(r"[\s\n]+", redo)
+
+# 20-
 
 for j in range(1,760):
     i=j+170

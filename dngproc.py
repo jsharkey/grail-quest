@@ -25,6 +25,12 @@ from math import factorial
 from scipy.ndimage import convolve1d
 #from ._arraytools import axis_slice
 
+
+# 20-630
+# avconv -r 30   -i "tproc%04d.jpg" -vf 'fade=in:20:15, fade=out:630:30' halfpass.mp4
+# avconv -r 30   -i "tproc%04d.jpg" -vf 'fade=in:20:15, fade=out:630:30, select=gte(n\,20)*lte(n\,660)' halfpass.mp4
+
+
 def axis_slice(a, start=None, stop=None, step=None, axis=-1):
     """Take a slice along axis 'axis' from 'a'.
     Parameters
@@ -394,6 +400,12 @@ re_ident = re.compile(
 # Quickly estimate luminance using DNG thumbnail
 files = [ "proc%04d.jpg" % (n) for n in range(1, 760) ]
 
+#for f in files:
+#    print("convert %s -crop 2400x220+1600+0 %s.sky.jpg" % (f, f))
+
+#exit()
+# 1600,0 to 4024,220
+
 # Quickly estimate luminance using DNG thumbnail
 
 widgets = ['normalize'.ljust(20), '(', Counter(), '/', str(len(files)), ') ', Percentage(), ' ', Bar(), ' ', ETA()]
@@ -408,7 +420,8 @@ for i in range(len(files)):
     thumb = dng
     stats = "%s.stats" % (dng)
     if not os.path.isfile(stats):
-        print("identify -verbose %s > %s.stats" % (dng, dng))
+        print("identify -verbose %s.sky.jpg > %s" % (dng, stats))
+        continue
         
         #res = subprocess.check_output(["identify", "-verbose", thumb], stderr=subprocess.STDOUT)
         #with open(stats, 'w') as f:
@@ -448,7 +461,7 @@ Compensation=%f
 """ % (exp_delta-1))
 
         fx = files[i]
-        print("rawtherapee -o exp%s -p %s.pp3 -c %s" % (fx,fx,fx))
+        print("rawtherapee -Y -o exp%s -p %s.pp3 -c %s.sky.jpg" % (fx,fx,fx))
 
 exit()
 
